@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#161009">
+<title>Hobbiton</title>
+<link rel="apple-touch-icon" href="flame-icon.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'><rect x='6' y='0' width='2' height='2' fill='%23FFCC00'/><rect x='4' y='2' width='2' height='2' fill='%23FF9900'/><rect x='6' y='2' width='2' height='2' fill='%23FFCC00'/><rect x='8' y='2' width='2' height='2' fill='%23FF9900'/><rect x='3' y='4' width='2' height='2' fill='%23FF6600'/><rect x='5' y='4' width='2' height='2' fill='%23FF9900'/><rect x='7' y='4' width='2' height='2' fill='%23FFCC00'/><rect x='9' y='4' width='2' height='2' fill='%23FF6600'/><rect x='3' y='6' width='2' height='2' fill='%23FF3300'/><rect x='5' y='6' width='2' height='2' fill='%23FF6600'/><rect x='7' y='6' width='2' height='2' fill='%23FF9900'/><rect x='9' y='6' width='2' height='2' fill='%23FF3300'/><rect x='3' y='8' width='2' height='2' fill='%23CC2200'/><rect x='5' y='8' width='2' height='2' fill='%23FF3300'/><rect x='7' y='8' width='2' height='2' fill='%23FF6600'/><rect x='9' y='8' width='2' height='2' fill='%23CC2200'/><rect x='4' y='10' width='2' height='2' fill='%23CC2200'/><rect x='6' y='10' width='2' height='2' fill='%23FF3300'/><rect x='8' y='10' width='2' height='2' fill='%23CC2200'/><rect x='5' y='12' width='2' height='2' fill='%23991100'/><rect x='7' y='12' width='2' height='2' fill='%23991100'/><rect x='5' y='14' width='2' height='2' fill='%23662200'/><rect x='7' y='14' width='2' height='2' fill='%23662200'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=Oswald:wght@400;500&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #161009;
+  --card: #2A2117;
+  --card-border: #3D3225;
+  --card-green: #1E2E1A;
+  --card-green-border: #2E4428;
+  --accent: #D4893F;
+  --accent-hover: #E09A50;
+  --text: #F5E6C8;
+  --text-dim: #9C8B72;
+  --text-muted: #6B5D4E;
+  --green: #5CB85C;
+  --green-text: #7FD47F;
+  --yellow: #D4A843;
+  --red: #D45C5C;
+  --orange: #D4893F;
+  --progress-bg: #3D3225;
+  --progress-fill: #D4893F;
+  --progress-fill-green: #4A9A4A;
+  --nav-bg: #1E1610;
+  --overlay: rgba(10,6,2,0.92);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-heading: 'Oswald', Arial, sans-serif;
+  --font-body: 'Karla', system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height:100%; margin:0; }
+body { background:var(--bg); color:var(--text); font-family:var(--font-body); font-size:15px; line-height:1.5; overflow:hidden; }
+#app { display:flex; flex-direction:column; height:100%; height:100dvh; position:fixed; top:0; left:0; right:0; bottom:0; overflow:hidden; }
+
+/* Fairy lights */
+.fairy-lights { height:20px; display:flex; justify-content:center; gap:10px; padding:8px 16px 0; flex-wrap:wrap; }
+.fairy-lights span { width:8px; height:8px; border-radius:50%; animation: twinkle 3s ease-in-out infinite; }
+.fairy-lights span:nth-child(5n+1) { background:#D45C5C; animation-delay:0s; }
+.fairy-lights span:nth-child(5n+2) { background:#D4A843; animation-delay:0.6s; }
+.fairy-lights span:nth-child(5n+3) { background:#5CB85C; animation-delay:1.2s; }
+.fairy-lights span:nth-child(5n+4) { background:#D4893F; animation-delay:1.8s; }
+.fairy-lights span:nth-child(5n+5) { background:#7FB3D4; animation-delay:2.4s; }
+@keyframes twinkle { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+/* Header */
+.header { padding:4px 20px 8px; display:flex; justify-content:space-between; align-items:flex-start; }
+.header h1 { font-family:var(--font-display); font-style:italic; font-size:36px; font-weight:400; color:var(--text); }
+.header .subtitle { font-family:var(--font-heading); font-size:12px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; }
+.header-right { display:flex; gap:8px; align-items:center; margin-top:8px; }
+.icon-btn { width:40px; height:40px; border-radius:50%; border:1px solid var(--card-border); background:var(--card); display:flex; align-items:center; justify-content:center; color:var(--text-dim); cursor:pointer; font-size:18px; }
+.icon-btn:active { background:var(--card-border); }
+
+/* Scrollable content area */
+.content { flex:1 1 0%; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:0 16px 100px; min-height:0; }
+
+/* Section headers */
+.section-title { font-family:var(--font-heading); font-size:13px; letter-spacing:2.5px; text-transform:uppercase; color:var(--yellow); margin:20px 0 10px; }
+.section-title.green { color:var(--green-text); }
+
+/* Cards */
+.card { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:16px; margin-bottom:12px; }
+.card-green { background:var(--card-green); border:1px solid var(--card-green-border); }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:10px 18px; border-radius:8px; border:none; font-family:var(--font-body); font-size:14px; font-weight:500; cursor:pointer; transition:background 0.2s; }
+.btn-primary { background:var(--accent); color:#1a1008; }
+.btn-primary:active { background:var(--accent-hover); }
+.btn-outline { background:transparent; border:1px solid var(--card-border); color:var(--text-dim); }
+.btn-outline:active { background:var(--card); }
+.btn-small { padding:7px 14px; font-size:13px; }
+.btn-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+
+/* Progress bar */
+.progress-bar { height:6px; background:var(--progress-bg); border-radius:3px; margin:8px 0; overflow:hidden; }
+.progress-fill { height:100%; border-radius:3px; transition:width 0.3s ease; }
+.progress-fill.orange { background:var(--progress-fill); }
+.progress-fill.green { background:var(--progress-fill-green); }
+.progress-fill.dark { background:var(--text-muted); }
+
+/* Show card */
+.show-name { font-family:var(--font-display); font-style:italic; font-size:24px; margin-bottom:2px; }
+.show-info { font-size:13px; color:var(--text-dim); }
+.show-card-header { display:flex; justify-content:space-between; align-items:flex-start; }
+.edit-btn { width:36px; height:36px; border-radius:50%; border:1px solid var(--card-border); background:transparent; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:16px; }
+
+/* Queue */
+.queue-item { display:flex; align-items:center; padding:14px 0; border-bottom:1px solid var(--card-border); }
+.queue-item:last-child { border-bottom:none; }
+.queue-num { font-family:var(--font-heading); color:var(--accent); min-width:28px; font-size:15px; }
+.queue-name { flex:1; font-size:15px; }
+.queue-actions { display:flex; gap:4px; }
+.queue-btn { width:36px; height:36px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; }
+.queue-btn:disabled { opacity:0.3; }
+.queue-btn:active:not(:disabled) { background:var(--card-border); }
+
+/* Movie turn card */
+.turn-name { font-family:var(--font-display); font-style:italic; font-size:28px; margin-bottom:8px; }
+
+/* Last logged */
+.last-logged-title { font-size:17px; font-weight:700; }
+.last-logged-sub { font-size:13px; color:var(--text-dim); margin-top:2px; }
+
+/* Movie/book list items */
+.list-item { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid rgba(61,50,37,0.5); }
+.list-item:last-of-type { border-bottom:none; }
+.remove-btn { width:36px; height:36px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-dim); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.add-row { display:flex; gap:8px; margin-top:8px; }
+.add-row input { flex:1; background:var(--card); border:1px solid var(--card-border); border-radius:8px; padding:10px 14px; color:var(--text); font-family:var(--font-body); font-size:14px; outline:none; }
+.add-row input::placeholder { color:var(--text-muted); }
+.add-btn { width:40px; height:40px; border-radius:8px; border:none; background:var(--accent); color:#1a1008; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+/* History entry */
+.history-entry { border-left:3px solid var(--accent); padding:0 0 24px 16px; margin-bottom:0; }
+.history-title { font-family:var(--font-display); font-style:italic; font-size:22px; }
+.history-meta { font-size:13px; color:var(--text-dim); margin:2px 0 10px; }
+.history-person { font-family:var(--font-heading); font-size:12px; letter-spacing:1.5px; text-transform:uppercase; }
+.history-person.ari { color:var(--accent); }
+.history-person.eric { color:var(--green-text); }
+.rating-badge { font-size:13px; margin-left:8px; }
+.rating-badge.loved { color:var(--green-text); }
+.rating-badge.liked { color:var(--yellow); }
+.rating-badge.okay { color:var(--text-dim); }
+.rating-badge.disliked { color:var(--red); }
+.history-review { font-style:italic; color:var(--text); opacity:0.85; margin:4px 0 8px; font-size:14px; }
+.history-poster { width:60px; height:90px; border-radius:6px; object-fit:cover; float:right; margin:0 0 8px 12px; }
+
+/* History tabs */
+.history-tabs { display:flex; gap:8px; margin-bottom:16px; }
+.history-tab { flex:1; padding:10px; border-radius:10px; border:1px solid var(--card-border); background:transparent; color:var(--text-dim); font-family:var(--font-body); font-size:14px; cursor:pointer; text-align:center; }
+.history-tab.active { background:var(--accent); color:#1a1008; border-color:var(--accent); font-weight:700; }
+
+/* Book reading section */
+.book-title { font-family:var(--font-display); font-style:italic; font-size:24px; line-height:1.2; }
+.book-author { font-size:14px; color:var(--text-dim); margin-top:4px; }
+.book-deadline { font-family:var(--font-heading); font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent); margin-top:12px; }
+.book-chapters { font-size:18px; font-weight:700; margin-top:2px; }
+.book-behind { color:var(--red); font-size:14px; margin-top:4px; }
+.book-pace { color:var(--green-text); font-size:14px; margin-top:4px; }
+.book-level { font-size:13px; color:var(--text-dim); margin-top:4px; }
+.person-progress { font-size:13px; color:var(--text-dim); margin-top:8px; }
+
+/* Schedule */
+.schedule-item { display:flex; align-items:center; padding:12px 0; border-bottom:1px solid var(--card-border); }
+.schedule-item:last-child { border-bottom:none; }
+.schedule-dot { width:10px; height:10px; border-radius:50%; margin-right:12px; flex-shrink:0; }
+.schedule-dot.done { background:var(--green); }
+.schedule-dot.current { background:var(--accent); }
+.schedule-dot.future { background:var(--text-muted); }
+.schedule-text { flex:1; }
+.schedule-chapters { font-size:15px; font-weight:500; }
+.schedule-date { font-size:12px; color:var(--text-dim); }
+.schedule-item.past { opacity:0.5; }
+.schedule-pick { font-family:var(--font-heading); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--green-text); }
+
+/* Pacing indicator */
+.pace-indicator { display:flex; align-items:center; gap:8px; margin-top:10px; padding:10px 14px; border-radius:10px; font-size:14px; }
+.pace-indicator.on-track { background:rgba(76,175,80,0.12); color:#7FD47F; border:1px solid rgba(76,175,80,0.2); }
+.pace-indicator.nudge { background:rgba(212,168,67,0.12); color:#D4C06A; border:1px solid rgba(212,168,67,0.2); }
+.pace-indicator.behind { background:rgba(212,92,92,0.10); color:#E08080; border:1px solid rgba(212,92,92,0.18); }
+.pace-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.pace-indicator.on-track .pace-dot { background:#5CB85C; }
+.pace-indicator.nudge .pace-dot { background:#D4A843; }
+.pace-indicator.behind .pace-dot { background:#D45C5C; }
+
+/* Bottom nav */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--nav-bg); border-top:1px solid var(--card-border); display:flex; padding:6px 0; padding-bottom:max(6px, env(safe-area-inset-bottom)); z-index:100; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 0; cursor:pointer; color:var(--text-muted); text-decoration:none; border:none; background:none; font-family:var(--font-heading); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; }
+.nav-item.active { color:var(--accent); }
+.nav-icon { font-size:20px; }
+
+/* Passcode gate */
+.gate { position:fixed; inset:0; background:var(--bg); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.gate h1 { font-family:var(--font-display); font-style:italic; font-size:42px; margin-bottom:8px; }
+.gate .subtitle { font-family:var(--font-heading); font-size:12px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; margin-bottom:32px; }
+.gate input { width:240px; text-align:center; background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:14px; color:var(--text); font-family:var(--font-body); font-size:18px; letter-spacing:1px; outline:none; }
+.gate input:focus { border-color:var(--accent); }
+.gate .error { color:var(--red); font-size:13px; margin-top:8px; height:20px; }
+
+/* Identity picker */
+.identity-picker { position:fixed; inset:0; background:var(--overlay); z-index:900; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+.identity-picker h2 { font-family:var(--font-display); font-style:italic; font-size:28px; margin-bottom:8px; }
+.identity-btn { width:160px; padding:16px; border-radius:12px; border:2px solid var(--card-border); background:var(--card); color:var(--text); font-family:var(--font-display); font-style:italic; font-size:22px; cursor:pointer; text-align:center; transition:all 0.2s; }
+.identity-btn:active { border-color:var(--accent); background:var(--accent); color:#1a1008; }
+
+/* Modals / overlays */
+.modal-overlay { position:fixed; inset:0; background:var(--overlay); z-index:800; display:flex; align-items:flex-end; justify-content:center; }
+.modal { background:var(--card); border-radius:16px 16px 0 0; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; padding:24px 20px; padding-bottom:max(24px, env(safe-area-inset-bottom)); }
+.modal-center { align-items:center; }
+.modal-center .modal { border-radius:16px; max-width:360px; max-height:80vh; }
+.modal h3 { font-family:var(--font-display); font-style:italic; font-size:22px; margin-bottom:16px; }
+.modal label { display:block; font-size:13px; color:var(--text-dim); margin-bottom:6px; margin-top:14px; }
+.modal input, .modal textarea, .modal select { width:100%; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; padding:10px 14px; color:var(--text); font-family:var(--font-body); font-size:14px; outline:none; }
+.modal input:focus, .modal textarea:focus { border-color:var(--accent); }
+.modal textarea { min-height:60px; resize:vertical; }
+.modal select { appearance:none; }
+.modal .btn { margin-top:16px; width:100%; justify-content:center; }
+
+/* TMDB search results */
+.tmdb-results { max-height:300px; overflow-y:auto; margin-top:8px; }
+.tmdb-result { display:flex; gap:10px; padding:10px; border-radius:8px; cursor:pointer; align-items:center; }
+.tmdb-result:active { background:var(--card-border); }
+.tmdb-poster-small { width:40px; height:60px; border-radius:4px; object-fit:cover; background:var(--card-border); flex-shrink:0; }
+.tmdb-info { flex:1; }
+.tmdb-title { font-size:14px; font-weight:700; }
+.tmdb-year { font-size:12px; color:var(--text-dim); }
+.tmdb-genres { font-size:11px; color:var(--text-muted); }
+
+/* Slot machine */
+.slot-overlay { position:fixed; inset:0; background:rgba(10,6,2,0.96); z-index:850; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.slot-machine { width:280px; height:80px; overflow:hidden; border:2px solid var(--accent); border-radius:12px; background:var(--card); position:relative; margin:20px 0; }
+.slot-reel { display:flex; flex-direction:column; transition:transform 3s cubic-bezier(0.23, 1, 0.32, 1); }
+.slot-item { height:80px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-style:italic; font-size:20px; padding:0 16px; text-align:center; }
+.slot-label { font-family:var(--font-heading); font-size:14px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); }
+.slot-result { font-family:var(--font-display); font-style:italic; font-size:32px; color:var(--accent); text-align:center; margin-top:16px; opacity:0; transition:opacity 0.5s; }
+.slot-result.show { opacity:1; }
+
+/* Confetti canvas */
+#confetti-canvas { position:fixed; inset:0; pointer-events:none; z-index:999; }
+
+/* Rating picker */
+.rating-options { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+.rating-option { padding:8px 16px; border-radius:8px; border:1px solid var(--card-border); background:transparent; color:var(--text-dim); cursor:pointer; font-size:14px; font-family:var(--font-body); }
+.rating-option.selected { border-color:var(--accent); background:var(--accent); color:#1a1008; }
+
+/* Tonight tab */
+.tonight-section { margin-bottom:16px; }
+.tonight-label { font-size:12px; color:var(--text-dim); font-family:var(--font-heading); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+.tonight-value { font-family:var(--font-display); font-style:italic; font-size:20px; }
+.tonight-sub { font-size:13px; color:var(--text-dim); }
+
+/* Wrapped / Year in Review */
+.wrapped-card { text-align:center; padding:24px 16px; }
+.wrapped-big-number { font-family:var(--font-display); font-size:60px; color:var(--accent); line-height:1; }
+.wrapped-label { font-family:var(--font-heading); font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-top:4px; }
+.wrapped-stat { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--card-border); }
+.wrapped-stat:last-child { border-bottom:none; }
+.wrapped-stat-label { color:var(--text-dim); }
+.wrapped-stat-value { font-weight:700; color:var(--accent); }
+
+/* Settings panel */
+.settings-section { margin-bottom:20px; }
+.settings-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--card-border); }
+.settings-label { font-size:14px; }
+.settings-value { font-size:14px; color:var(--text-dim); }
+
+/* Toast notification */
+.toast { position:fixed; top:60px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--accent); border-radius:10px; padding:10px 20px; color:var(--text); font-size:14px; z-index:950; opacity:0; transition:opacity 0.3s; pointer-events:none; }
+.toast.show { opacity:1; }
+
+/* Edit show modal seasons input */
+.season-inputs { display:flex; flex-direction:column; gap:8px; margin-top:8px; max-height:200px; overflow-y:auto; }
+.season-row { display:flex; gap:8px; align-items:center; font-size:13px; }
+.season-row input { width:70px; }
+.season-row label { color:var(--text-dim); min-width:30px; }
+
+/* Misc */
+.empty-text { color:var(--text-muted); font-size:14px; padding:8px 0; }
+.hidden { display:none !important; }
+.text-center { text-align:center; }
+.mt-8 { margin-top:8px; }
+.mt-16 { margin-top:16px; }
+.mb-8 { margin-bottom:8px; }
+
+/* Loading */
+.loading { text-align:center; padding:40px; color:var(--text-dim); }
+
+/* Export button */
+.export-row { display:flex; gap:8px; margin-top:12px; }
+
+@media (min-width:500px) {
+  .content { max-width:480px; margin:0 auto; }
+  .header { max-width:480px; margin:0 auto; }
+  .fairy-lights { max-width:480px; margin:0 auto; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<!-- Passcode Gate -->
+<div class="gate" id="gate">
+  <div class="fairy-lights" id="gate-lights"></div>
+  <h1>Hobbiton</h1>
+  <div class="subtitle">Ari &amp; Eric</div>
+  <input type="password" id="passcode-input" placeholder="passcode" maxlength="20" autocomplete="off">
+  <div class="error" id="gate-error"></div>
+</div>
+
+<!-- Identity Picker -->
+<div class="identity-picker hidden" id="identity-picker">
+  <h2>Who's watching?</h2>
+  <button class="identity-btn" onclick="pickIdentity('ari')">Ari</button>
+  <button class="identity-btn" onclick="pickIdentity('eric')">Eric</button>
+</div>
+
+<!-- Main App -->
+<div class="hidden" id="app">
+  <div class="fairy-lights" id="app-lights"></div>
+  <div class="header">
+    <div>
+      <h1>Hobbiton</h1>
+      <div class="subtitle">Ari &amp; Eric</div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" onclick="refreshData()" title="Refresh">↻</button>
+      <button class="icon-btn" onclick="openSettings()" title="Settings">⚙</button>
+    </div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav hidden" id="bottom-nav">
+  <button class="nav-item active" data-tab="tonight" onclick="switchTab('tonight')">
+    <span class="nav-icon">🌙</span>Tonight
+  </button>
+  <button class="nav-item" data-tab="shows" onclick="switchTab('shows')">
+    <span class="nav-icon">📺</span>Shows
+  </button>
+  <button class="nav-item" data-tab="movies" onclick="switchTab('movies')">
+    <span class="nav-icon">🎬</span>Movies
+  </button>
+  <button class="nav-item" data-tab="books" onclick="switchTab('books')">
+    <span class="nav-icon">📖</span>Books
+  </button>
+  <button class="nav-item" data-tab="history" onclick="switchTab('history')">
+    <span class="nav-icon">🕐</span>History
+  </button>
+</div>
+
+<script>
+// ============================================
+// CONFIG — Replace these with your Supabase credentials and TMDB key
+// ============================================
+const SUPABASE_URL = 'https://pdahijkbubgdfmelkbig.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkYWhpamtidWJnZGZtZWxrYmlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQyMTM4NjksImV4cCI6MjA5OTc4OTg2OX0.TV8DhuWezLssc11TjtDizV0Zzdy1K64ys6LDA3AbreY';
+const TMDB_API_KEY = '81fc72d6bbf0af5a9f9e551cb85e88f5';
+const TMDB_IMG = 'https://image.tmdb.org/t/p/w200';
+const TMDB_API = 'https://api.themoviedb.org/3';
+
+// ============================================
+// STATE
+// ============================================
+
+// Fallback seed data — used if Supabase hasn't loaded yet or queries fail
+const SEED_SHOWS = [
+  { id: 'seed-office', name: 'The Office', show_type: 'comfort', status: 'active', season: 3, episode: 12, total_episodes: 25,
+    seasons_data: [{season:1,episodes:6},{season:2,episodes:22},{season:3,episodes:25},{season:4,episodes:19},{season:5,episodes:28},{season:6,episodes:26},{season:7,episodes:26},{season:8,episodes:24},{season:9,episodes:25}],
+    started_at: '2026-07-01' },
+  { id: 'seed-andor', name: 'Andor', show_type: 'serious', status: 'active', season: 2, episode: 1, total_episodes: 12,
+    seasons_data: [{season:1,episodes:12},{season:2,episodes:12}],
+    started_at: '2026-08-01' },
+  { id: 'seed-succession', name: 'Succession', show_type: 'serious', status: 'finished', season: 4, episode: 10, total_episodes: 10,
+    started_at: '2026-03-01', finished_at: '2026-07-15',
+    rating_ari: 'loved', review_ari: 'I loved it in the way you love a really intense deep tissue massage. (painful but cathartic/rewarding!) Thank you for showing it to me!!',
+    rating_eric: 'loved', review_eric: 'Roman is a little freak twerp. If it is to be said.' },
+  { id: 'seed-q1', name: 'Veep', show_type: 'comfort', status: 'queued', queue_position: 1 },
+  { id: 'seed-q2', name: 'Community', show_type: 'comfort', status: 'queued', queue_position: 2 },
+  { id: 'seed-q3', name: 'Parks and Rec', show_type: 'comfort', status: 'queued', queue_position: 3 },
+  { id: 'seed-q4', name: 'The Mandalorian', show_type: 'comfort', status: 'queued', queue_position: 4 },
+  { id: 'seed-q5', name: 'Hacks', show_type: 'comfort', status: 'queued', queue_position: 5 },
+  { id: 'seed-q6', name: 'Pluribus', show_type: 'serious', status: 'queued', queue_position: 1 },
+  { id: 'seed-q7', name: "Widow's Bay", show_type: 'serious', status: 'queued', queue_position: 2 },
+];
+
+const SEED_MOVIES = [
+  { id: 'seed-m1', title: 'The Dark Knight Rises', status: 'watched', picked_by: 'eric', watched_date: '2026-08-21',
+    rating_ari: 'loved', review_ari: "what an insane trilogy wow.... Nolan and co did something I didn't think possible with superhero movies. Insane. Insane. Wonderful score by zimmer too",
+    rating_eric: 'loved', review_eric: 'This movie is a cherry on top of an extremely ambitious trilogy that communicates a grounded view of superheroes in an era where very little people had done something similar. Also why is Tom Hardy GIGANTIC' },
+  { id: 'seed-m2', title: 'The Invite', status: 'watched', picked_by: 'ari', watched_date: '2026-08-19',
+    rating_ari: 'loved', review_ari: 'absolutely amazing score wonderful directing and acting from Olivia Wilde and Seth Rogan was delightful omgeee! Long live bisexual Ed Norton',
+    rating_eric: 'loved', review_eric: "A movie that's like a play and super fun and strange. The tone of the music changing in certain scenes was SO fun" },
+  { id: 'seed-m3', title: 'The Dark Knight', status: 'watched', picked_by: 'eric', watched_date: '2026-08-17',
+    rating_ari: 'loved', review_ari: 'WHAT DA FUCKKKK AMAZE AMZE AMAZE',
+    rating_eric: 'loved', review_eric: 'GOAT movie' },
+  { id: 'seed-m4', title: 'Batman Begins', status: 'watched', picked_by: 'eric', watched_date: '2026-08-16',
+    rating_ari: 'loved', review_ari: 'Ideal silly to badass ratio',
+    rating_eric: 'loved', review_eric: 'Fun fun fun take on Batman' },
+  { id: 'seed-m5', title: 'Joy Ride (Comedy)', status: 'watched', picked_by: 'ari', watched_date: '2026-08-14',
+    rating_ari: 'loved', review_ari: 'I may have cried more than strictly warranted LOL',
+    rating_eric: 'liked', review_eric: 'Silly movie with a good core message about friendship. deadeye is the best' },
+  { id: 'seed-m6', title: 'Nightcrawler', status: 'watched', picked_by: 'ari', watched_date: '2026-08-09',
+    rating_ari: 'loved', review_ari: 'BLINK, JAKE GYLLENHALL, BLINK!',
+    rating_eric: 'loved', review_eric: 'Jake gyllenhal is a freak and this movie was insane. How do you come up with this sh*t??' },
+  { id: 'seed-m7', title: 'Star Trek', status: 'watched', picked_by: 'eric', watched_date: '2026-08-09',
+    rating_ari: 'liked', review_ari: "Overall really fun movie - I feel like I would've loved it more if I knew the source material better! Actors were great though and overall super fun !!!",
+    rating_eric: 'liked', review_eric: 'A great sci-fi romp that was a fun story with great performances! Definitely would have been better served by being a Star Trek fan, as I hear it every faithful to the spirit and story of the original media' },
+  { id: 'seed-m8', title: 'The Social Network', status: 'watched', picked_by: 'ari', watched_date: '2026-08-04',
+    rating_ari: 'loved', review_ari: 'holy shit holy shit holy shit wow wow wow!!',
+    rating_eric: 'loved', review_eric: "Great movie! I'm interested to know how much is true versus how much is exaggerated. Soundtrack was bopping and the capitalismmaxxing shown in the movie has gone even more out of control since the movie first released!" },
+  { id: 'seed-m9', title: 'Rogue One', status: 'watched', picked_by: 'eric', watched_date: '2026-07-31',
+    rating_ari: 'loved', review_ari: 'Awesome and heartbreaking. Felt somehow true to the OGs but also much much darker. Got me soooo hyped for andor!!!',
+    rating_eric: 'loved', review_eric: "Best Star Wars movie that set up that the upbeat tone of the original trilogy is supported by the heroic actions of many people who laid the groundwork for the Death Star plans. Can't wait to rewatch Andor!" },
+  // Queues
+  { id: 'seed-mq1', title: 'Anatomy of a Fall', status: 'queued', queue_owner: 'ari', queue_position: 1 },
+  { id: 'seed-mq2', title: 'Challengers', status: 'queued', queue_owner: 'ari', queue_position: 2 },
+  { id: 'seed-mq3', title: 'The drama', status: 'queued', queue_owner: 'ari', queue_position: 3 },
+  { id: 'seed-mq4', title: 'Creep (Horror Movie)', status: 'queued', queue_owner: 'ari', queue_position: 4 },
+  { id: 'seed-mq5', title: 'Please Stand by', status: 'queued', queue_owner: 'ari', queue_position: 5 },
+  { id: 'seed-mq6', title: 'Little Women', status: 'queued', queue_owner: 'ari', queue_position: 6 },
+  { id: 'seed-mq7', title: 'Ella Enchanted', status: 'queued', queue_owner: 'ari', queue_position: 7 },
+  { id: 'seed-mq8', title: 'Brokeback mountain', status: 'queued', queue_owner: 'ari', queue_position: 8 },
+  { id: 'seed-mq9', title: 'The godfather', status: 'queued', queue_owner: 'ari', queue_position: 9 },
+  { id: 'seed-mq10', title: 'Memento', status: 'queued', queue_owner: 'ari', queue_position: 10 },
+  { id: 'seed-mq11', title: 'Tenet', status: 'queued', queue_owner: 'ari', queue_position: 11 },
+  { id: 'seed-mq12', title: 'Casino Royale', status: 'queued', queue_owner: 'ari', queue_position: 12 },
+  { id: 'seed-mq13', title: 'Inglorious Basterds', status: 'queued', queue_owner: 'ari', queue_position: 13 },
+  { id: 'seed-mq14', title: 'My big fat Greek wedding', status: 'queued', queue_owner: 'ari', queue_position: 14 },
+  { id: 'seed-mq15', title: 'Solo', status: 'queued', queue_owner: 'eric', queue_position: 1 },
+  { id: 'seed-mq16', title: 'Inception', status: 'queued', queue_owner: 'eric', queue_position: 2 },
+  { id: 'seed-mq17', title: 'Tron Legacy', status: 'queued', queue_owner: 'eric', queue_position: 3 },
+  { id: 'seed-mq18', title: 'A series of unfortunate events', status: 'queued', queue_owner: 'eric', queue_position: 4 },
+];
+
+const SEED_BOOKS = [
+  { id: 'seed-b1', title: 'The Priory Of The Orange Tree', author: 'Samantha Shannon', status: 'reading', picked_by: 'ari',
+    total_chapters: 76, chapter_ari: 13, chapter_eric: 13, started_at: '2026-07-27', target_finish_date: '2026-10-12',
+    schedule: [
+      {week:1,chapters:"1-6",due:"2026-08-04",start:1,end:6,pick:"ari"},
+      {week:2,chapters:"7-13",due:"2026-08-18",start:7,end:13,pick:"eric"},
+      {week:3,chapters:"14-19",due:"2026-08-25",start:14,end:19},
+      {week:4,chapters:"20-25",due:"2026-09-01",start:20,end:25},
+      {week:5,chapters:"26-32",due:"2026-09-08",start:26,end:32},
+      {week:6,chapters:"33-38",due:"2026-09-15",start:33,end:38},
+      {week:7,chapters:"39-44",due:"2026-09-22",start:39,end:44},
+      {week:8,chapters:"45-50",due:"2026-09-29",start:45,end:50},
+      {week:9,chapters:"51-56",due:"2026-10-06",start:51,end:56},
+      {week:10,chapters:"57-62",due:"2026-10-13",start:57,end:62},
+      {week:11,chapters:"63-69",due:"2026-10-20",start:63,end:69},
+      {week:12,chapters:"70-76",due:"2026-10-27",start:70,end:76}
+    ] },
+  { id: 'seed-bq1', title: 'the will of many', status: 'queued', queue_owner: 'ari' },
+  { id: 'seed-bq2', title: 'Between two fires', status: 'queued', queue_owner: 'ari' },
+];
+
+const SEED_SETTINGS = { id: 1, passcode: 'orangetree', movie_turn: 'ari', forfeit_bank_ari: 0, forfeit_bank_eric: 0, book_turn: 'ari' };
+
+let state = {
+  currentTab: 'tonight',
+  currentUser: null,
+  historySubTab: 'movies',
+  settings: SEED_SETTINGS,
+  shows: [...SEED_SHOWS],
+  movies: [...SEED_MOVIES],
+  books: [...SEED_BOOKS],
+};
+
+let sbClient = null;
+
+// ============================================
+// SUPABASE INIT
+// ============================================
+function initSupabase() {
+  if (sbClient) return;
+  try {
+    const lib = window.supabase;
+    if (!lib || !lib.createClient) {
+      showToast('DB library not loaded');
+      return;
+    }
+    sbClient = lib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    setupRealtime();
+    loadAllData();
+  } catch(e) {
+    showToast('DB error: ' + e.message);
+  }
+}
+
+async function loadAllData() {
+  try {
+    const [settingsRes, showsRes, moviesRes, booksRes] = await Promise.all([
+      sbClient.from('hobbiton_settings').select('*').single(),
+      sbClient.from('hobbiton_shows').select('*'),
+      sbClient.from('hobbiton_movies').select('*'),
+      sbClient.from('hobbiton_books').select('*')
+    ]);
+
+    if (!settingsRes.error && settingsRes.data) state.settings = settingsRes.data;
+    if (!showsRes.error && showsRes.data && showsRes.data.length > 0) {
+      state.shows = dedup(showsRes.data, 'name').sort((a,b) => (a.queue_position || 0) - (b.queue_position || 0));
+    }
+    if (!moviesRes.error && moviesRes.data && moviesRes.data.length > 0) {
+      state.movies = dedup(moviesRes.data, 'title');
+    }
+    if (!booksRes.error && booksRes.data && booksRes.data.length > 0) {
+      state.books = dedup(booksRes.data, 'title');
+    }
+
+    render();
+  } catch(e) {
+    console.error('Load error:', e);
+    render();
+  }
+}
+
+function setupRealtime() {
+  sbClient.channel('hobbiton-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'hobbiton_settings' }, () => loadAllData())
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'hobbiton_shows' }, () => loadAllData())
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'hobbiton_movies' }, () => loadAllData())
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'hobbiton_books' }, () => loadAllData())
+    .subscribe();
+}
+
+async function refreshData() {
+  if (!sbClient) { showToast('Still connecting...'); return; }
+  showToast('Refreshing...');
+  await loadAllData();
+  showToast('Updated!');
+}
+
+// ============================================
+// FAIRY LIGHTS
+// ============================================
+function renderLights(el) {
+  el.innerHTML = Array.from({length:28}, () => '<span></span>').join('');
+}
+renderLights(document.getElementById('gate-lights'));
+renderLights(document.getElementById('app-lights'));
+
+// ============================================
+// PASSCODE GATE
+// ============================================
+const gateEl = document.getElementById('gate');
+const passInput = document.getElementById('passcode-input');
+const gateError = document.getElementById('gate-error');
+
+passInput.addEventListener('keydown', async (e) => {
+  if (e.key !== 'Enter') return;
+  const code = passInput.value;
+  if (code.length > 0) {
+    if (!sbClient) {
+      // Check against a default if supabase isn't loaded yet
+      if (code === SEED_SETTINGS.passcode) {
+        passGate();
+      } else {
+        gateError.textContent = 'Wrong passcode';
+        passInput.value = '';
+      }
+      return;
+    }
+    const { data } = await sbClient.from('hobbiton_settings').select('passcode').single();
+    const dbPass = data ? data.passcode : SEED_SETTINGS.passcode;
+    if (code === dbPass || code === SEED_SETTINGS.passcode) {
+      // If DB has old passcode, update it to match seed
+      if (data && data.passcode !== SEED_SETTINGS.passcode) {
+        await sbClient.from('hobbiton_settings').update({ passcode: SEED_SETTINGS.passcode }).eq('id', 1);
+      }
+      passGate();
+    } else {
+      gateError.textContent = 'Wrong passcode';
+      passInput.value = '';
+    }
+  }
+});
+
+function passGate() {
+  const saved = localStorage.getItem('hobbiton-user');
+  gateEl.classList.add('hidden');
+  if (saved) {
+    state.currentUser = saved;
+    showApp();
+  } else {
+    document.getElementById('identity-picker').classList.remove('hidden');
+  }
+}
+
+function pickIdentity(name) {
+  state.currentUser = name;
+  localStorage.setItem('hobbiton-user', name);
+  document.getElementById('identity-picker').classList.add('hidden');
+  showApp();
+}
+
+function showApp() {
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('bottom-nav').classList.remove('hidden');
+  render();
+}
+
+// ============================================
+// TAB SWITCHING
+// ============================================
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  render();
+  document.getElementById('content').scrollTop = 0;
+}
+
+// ============================================
+// RENDER
+// ============================================
+function render() {
+  const content = document.getElementById('content');
+  switch(state.currentTab) {
+    case 'tonight': content.innerHTML = renderTonight(); break;
+    case 'shows': content.innerHTML = renderShows(); break;
+    case 'movies': content.innerHTML = renderMovies(); break;
+    case 'books': content.innerHTML = renderBooks(); break;
+    case 'history': content.innerHTML = renderHistory(); break;
+  }
+}
+
+// ============================================
+// TONIGHT TAB
+// ============================================
+function renderTonight() {
+  const comforts = state.shows.filter(s => s.show_type === 'comfort' && s.status === 'active');
+  const serious = state.shows.find(s => s.show_type === 'serious' && s.status === 'active');
+  const book = state.books.find(b => b.status === 'reading');
+  const turn = state.settings?.movie_turn || 'ari';
+  const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+
+  let html = '';
+
+  // Comfort shows — "With Dinner"
+  comforts.forEach(s => {
+    const left = s.total_episodes - s.episode;
+    html += `<div class="section-title">With Dinner</div>
+    <div class="card tonight-section">
+      <div class="tonight-value">${esc(s.name)}</div>
+      <div class="tonight-sub">Up next: season ${s.season}, episode ${s.episode + 1} · ${left} left this season</div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-small" onclick="advanceEpisode('${s.id}')">✓ Watched an episode</button>
+        <button class="btn btn-outline btn-small" onclick="switchTab('shows')">Details</button>
+      </div>
+    </div>`;
+  });
+
+  // Serious show — "The Long One"
+  if (serious) {
+    const left = serious.total_episodes - serious.episode;
+    html += `<div class="section-title">The Long One</div>
+    <div class="card tonight-section">
+      <div class="tonight-value">${esc(serious.name)}</div>
+      <div class="tonight-sub">Up next: season ${serious.season}, episode ${serious.episode + 1} · ${left} left this season</div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-small" onclick="advanceEpisode('${serious.id}')">✓ Watched an episode</button>
+        <button class="btn btn-outline btn-small" onclick="switchTab('shows')">Details</button>
+      </div>
+    </div>`;
+  }
+
+  // Movie turn — "Next Movie Night"
+  html += `<div class="section-title">Next Movie Night</div>
+  <div class="card tonight-section">
+    <div class="tonight-value" style="font-size:20px"><span style="color:var(--accent)">${cap(turn)}</span> picks.</div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-small" onclick="openLogMovie()">+ Log a movie night</button>
+      <button class="btn btn-outline btn-small" onclick="switchTab('movies')">Lists →</button>
+    </div>
+  </div>`;
+
+  // Book progress — "Book Club"
+  if (book) {
+    const myChap = state.currentUser === 'eric' ? book.chapter_eric : book.chapter_ari;
+    const otherChap = state.currentUser === 'eric' ? book.chapter_ari : book.chapter_eric;
+    const otherName = state.currentUser === 'eric' ? 'Ari' : 'Eric';
+    const diff = myChap - otherChap;
+    let levelText = '';
+    if (diff > 0) levelText = `You are ${diff} ahead of ${otherName}.`;
+    else if (diff < 0) levelText = `You are ${Math.abs(diff)} behind ${otherName}.`;
+    else levelText = `You and ${otherName} are level.`;
+
+    html += `<div class="section-title green">Book Club</div>
+    <div class="card card-green tonight-section">
+      <div class="tonight-value">${esc(book.title)}</div>
+      ${renderPaceIndicator(book)}
+      <div class="tonight-sub">${levelText}</div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-small" onclick="advanceChapter()">✓ Finished chapter ${myChap + 1}</button>
+        <button class="btn btn-outline btn-small" onclick="switchTab('books')">Schedule →</button>
+      </div>
+    </div>`;
+  }
+
+  // Wrapped button
+  html += `<div class="mt-16 text-center">
+    <button class="btn btn-outline" onclick="openWrapped()">🎉 Year in Review</button>
+  </div>`;
+
+  return html;
+}
+
+// ============================================
+// SHOWS TAB
+// ============================================
+function renderShows() {
+  const comforts = state.shows.filter(s => s.show_type === 'comfort' && s.status === 'active');
+  const comfortQueue = state.shows.filter(s => s.show_type === 'comfort' && s.status === 'queued').sort((a,b) => a.queue_position - b.queue_position);
+  const serious = state.shows.find(s => s.show_type === 'serious' && s.status === 'active');
+  const seriousQueue = state.shows.filter(s => s.show_type === 'serious' && s.status === 'queued').sort((a,b) => a.queue_position - b.queue_position);
+
+  let html = `<div class="section-title">Comfort Show${comforts.length !== 1 ? 's' : ''}</div>`;
+
+  // Active comfort shows (up to 3)
+  if (comforts.length === 0) {
+    html += `<div class="card"><div class="empty-text">No active comfort show. Add one from the queue below!</div></div>`;
+  }
+  comforts.forEach(s => {
+    const pct = s.total_episodes > 0 ? Math.round((s.episode / s.total_episodes) * 100) : 0;
+    const left = s.total_episodes - s.episode;
+    html += `<div class="card">
+      <div class="show-card-header">
+        <div>
+          <div class="show-name">${esc(s.name)}</div>
+          <div class="show-info">Season ${s.season}, episode ${s.episode} of ${s.total_episodes} · ${left} to go</div>
+        </div>
+        <button class="edit-btn" onclick="openEditShow('${s.id}')">✎</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill orange" style="width:${pct}%"></div></div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-small" onclick="advanceEpisode('${s.id}')">+ Episode</button>
+        <button class="btn btn-outline btn-small" onclick="finishShow('${s.id}')">✓ Finished it</button>
+        <button class="btn btn-outline btn-small" onclick="dropShow('${s.id}')">✕ Drop</button>
+      </div>
+    </div>`;
+  });
+
+  if (comforts.length < 3) {
+    html += `<div class="text-center mb-8"><button class="btn btn-outline btn-small" onclick="activateFromQueue('comfort')">+ Activate a comfort show</button></div>`;
+  }
+
+  // Comfort queue
+  html += '<div class="section-title">Up Next</div>';
+  html += renderQueue(comfortQueue, 'comfort');
+
+  // Serious show
+  html += '<div class="section-title">Serious Show</div>';
+  if (serious) {
+    const pct = serious.total_episodes > 0 ? Math.round((serious.episode / serious.total_episodes) * 100) : 0;
+    const left = serious.total_episodes - serious.episode;
+    html += `<div class="card">
+      <div class="show-card-header">
+        <div>
+          <div class="show-name">${esc(serious.name)}</div>
+          <div class="show-info">Season ${serious.season}, episode ${serious.episode} of ${serious.total_episodes} · ${left} to go</div>
+        </div>
+        <button class="edit-btn" onclick="openEditShow('${serious.id}')">✎</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill green" style="width:${pct}%"></div></div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-small" onclick="advanceEpisode('${serious.id}')">+ Episode</button>
+        <button class="btn btn-outline btn-small" onclick="finishShow('${serious.id}')">✓ Finished it</button>
+      </div>
+    </div>`;
+  } else {
+    html += `<div class="card"><div class="empty-text">No active serious show.</div></div>`;
+  }
+
+  // Serious queue
+  html += '<div class="section-title">Up Next</div>';
+  html += renderQueue(seriousQueue, 'serious');
+
+  return html;
+}
+
+function renderQueue(items, type) {
+  let html = '<div class="card">';
+  if (items.length === 0) {
+    html += '<div class="empty-text">Queue is empty.</div>';
+  }
+  items.forEach((item, i) => {
+    html += `<div class="queue-item">
+      <span class="queue-num">${i+1}</span>
+      <span class="queue-name">${esc(item.name)}</span>
+      <div class="queue-actions">
+        <button class="queue-btn" ${i===0?'disabled':''} onclick="moveQueue('${item.id}',-1,'hobbiton_shows')">▲</button>
+        <button class="queue-btn" ${i===items.length-1?'disabled':''} onclick="moveQueue('${item.id}',1,'hobbiton_shows')">▼</button>
+        <button class="queue-btn" onclick="removeFromQueue('${item.id}','hobbiton_shows')">✕</button>
+      </div>
+    </div>`;
+  });
+  html += `<div class="add-row">
+    <input type="text" placeholder="+ Add to queue" id="add-queue-${type}" onkeydown="if(event.key==='Enter')addToShowQueue('${type}')">
+    <button class="add-btn" onclick="addToShowQueue('${type}')">+</button>
+  </div></div>`;
+  return html;
+}
+
+// ============================================
+// MOVIES TAB
+// ============================================
+function renderMovies() {
+  const turn = state.settings?.movie_turn || 'ari';
+  const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+  const watched = state.movies.filter(m => m.status === 'watched').sort((a,b) => new Date(b.watched_date) - new Date(a.watched_date));
+  const lastMovie = watched[0];
+  const ariQueue = state.movies.filter(m => m.status === 'queued' && m.queue_owner === 'ari').sort((a,b) => a.queue_position - b.queue_position);
+  const ericQueue = state.movies.filter(m => m.status === 'queued' && m.queue_owner === 'eric').sort((a,b) => a.queue_position - b.queue_position);
+
+  let html = `<div class="section-title">Whose Turn</div>
+  <div class="card">
+    <div class="turn-name">${cap(turn)} picks</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="openLogMovie()">+ Log a movie night</button>
+      <button class="btn btn-outline" onclick="letFateDecide()">⚄ Let fate decide</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline btn-small" onclick="forfeitTurn()">Forfeit</button>
+    </div>
+  </div>`;
+
+  // Last logged
+  if (lastMovie) {
+    const dateStr = formatDate(lastMovie.watched_date);
+    html += `<div class="section-title">Last Logged</div>
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        ${lastMovie.poster_path ? `<img class="history-poster" src="${TMDB_IMG}${lastMovie.poster_path}" alt="" style="float:none;margin:0">` : ''}
+        <div style="flex:1">
+          <div class="last-logged-title">${esc(lastMovie.title)}</div>
+          <div class="last-logged-sub">${cap(lastMovie.picked_by)}'s pick · ${dateStr}</div>
+          ${lastMovie.genres ? `<div class="last-logged-sub">${esc(lastMovie.genres)}</div>` : ''}
+          ${lastMovie.runtime ? `<div class="last-logged-sub">${lastMovie.runtime} min</div>` : ''}
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline btn-small" onclick="unlogMovie('${lastMovie.id}')">↩ Un-log this, turn goes back</button>
+      </div>
+    </div>`;
+  }
+
+  // Movie lists
+  html += `<div class="section-title">Ari's Movie List</div>`;
+  html += renderMovieList(ariQueue, 'ari');
+  html += `<div class="section-title">Eric's Movie List</div>`;
+  html += renderMovieList(ericQueue, 'eric');
+
+  return html;
+}
+
+function renderMovieList(items, owner) {
+  let html = '<div class="card">';
+  if (items.length === 0) {
+    html += `<div class="empty-text">Nothing yet. Whatever lands here becomes a one-tap shortcut when it is ${owner === 'ari' ? "Ari" : "Eric"}'s turn.</div>`;
+  }
+  items.forEach(item => {
+    html += `<div class="list-item">
+      <div style="display:flex;gap:8px;align-items:center;flex:1">
+        ${item.poster_path ? `<img src="${TMDB_IMG}${item.poster_path}" style="width:32px;height:48px;border-radius:4px;object-fit:cover">` : ''}
+        <span>${esc(item.title)}</span>
+      </div>
+      <button class="remove-btn" onclick="removeFromQueue('${item.id}','hobbiton_movies')">✕</button>
+    </div>`;
+  });
+  html += `<div class="add-row">
+    <input type="text" placeholder="Add a title" id="add-movie-${owner}" oninput="searchTMDB(this.value,'movie-results-${owner}')" onkeydown="if(event.key==='Enter')addToMovieQueue('${owner}')">
+    <button class="add-btn" onclick="addToMovieQueue('${owner}')">+</button>
+  </div>
+  <div class="tmdb-results" id="movie-results-${owner}"></div>
+  </div>`;
+  return html;
+}
+
+// ============================================
+// BOOKS TAB
+// ============================================
+function renderBooks() {
+  const reading = state.books.find(b => b.status === 'reading');
+  const ariQueue = state.books.filter(b => b.status === 'queued' && b.queue_owner === 'ari');
+  const ericQueue = state.books.filter(b => b.status === 'queued' && b.queue_owner === 'eric');
+
+  let html = '';
+
+  if (reading) {
+    const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+    const schedule = reading.schedule || [];
+    const today = new Date();
+    const currentWeek = schedule.find(w => new Date(w.due) >= today) || schedule[schedule.length - 1];
+
+    html += `<div class="section-title green">Reading Now</div>
+    <div class="card card-green">
+      <div class="book-title">${esc(reading.title)}</div>
+      <div class="book-author">${esc(reading.author || '')} · ${cap(reading.picked_by || 'unknown')}'s pick · started ${formatDate(reading.started_at)}</div>`;
+
+    // Current week info
+    if (currentWeek) {
+      const dueDate = formatDate(currentWeek.due);
+      html += `<div class="book-deadline">By ${dueDate}</div>
+      <div class="book-chapters">Chapters ${currentWeek.chapters || (currentWeek.start + '–' + currentWeek.end)}</div>`;
+    }
+
+    // Soft pacing indicator (green/yellow/red, no numbers)
+    html += renderPaceIndicator(reading);
+
+    // Level check
+    const otherName = state.currentUser === 'eric' ? 'Ari' : 'Eric';
+    const myChapBooks = state.currentUser === 'eric' ? reading.chapter_eric : reading.chapter_ari;
+    const otherChapBooks = state.currentUser === 'eric' ? reading.chapter_ari : reading.chapter_eric;
+    if (myChapBooks === otherChapBooks) {
+      html += `<div class="book-level">You and ${otherName} are level.</div>`;
+    } else if (myChapBooks > otherChapBooks) {
+      html += `<div class="book-level">You are ${myChapBooks - otherChapBooks} ahead of ${otherName}.</div>`;
+    } else {
+      html += `<div class="book-level">You are ${otherChapBooks - myChapBooks} behind ${otherName}.</div>`;
+    }
+
+    // Progress bars
+    html += `<div class="person-progress">You · chapter ${state.currentUser === 'eric' ? reading.chapter_eric : reading.chapter_ari} of ${reading.total_chapters}</div>
+    <div class="progress-bar"><div class="progress-fill orange" style="width:${Math.round((state.currentUser === 'eric' ? reading.chapter_eric : reading.chapter_ari)/reading.total_chapters*100)}%"></div></div>
+    <div class="person-progress">${state.currentUser === 'eric' ? 'Ari' : 'Eric'} · chapter ${state.currentUser === 'eric' ? reading.chapter_ari : reading.chapter_eric}</div>
+    <div class="progress-bar"><div class="progress-fill dark" style="width:${Math.round((state.currentUser === 'eric' ? reading.chapter_ari : reading.chapter_eric)/reading.total_chapters*100)}%"></div></div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-small" onclick="advanceChapter()">✓ Finished chapter ${(state.currentUser === 'eric' ? reading.chapter_eric : reading.chapter_ari) + 1}</button>
+      <button class="btn btn-outline btn-small" onclick="openJumpChapter()">✎ Jump to a chapter</button>
+    </div>
+    </div>`;
+
+    // Schedule
+    html += renderSchedule(reading);
+  } else {
+    html += `<div class="section-title green">Reading Now</div>
+    <div class="card card-green"><div class="empty-text">No book in progress. Start one from the lists below!</div></div>`;
+  }
+
+  // Book lists
+  html += `<div class="section-title">Ari's Book List</div>`;
+  html += renderBookList(ariQueue, 'ari');
+  html += `<div class="section-title">Eric's Book List</div>`;
+  html += renderBookList(ericQueue, 'eric');
+
+  return html;
+}
+
+function renderPaceIndicator(book) {
+  const schedule = book.schedule || [];
+  const today = new Date();
+  const currentWeek = schedule.find(w => new Date(w.due) >= today);
+  if (!currentWeek) return '';
+
+  const myChap = state.currentUser === 'eric' ? book.chapter_eric : book.chapter_ari;
+  const weekStart = currentWeek.start;
+  const weekEnd = currentWeek.end;
+  const chaptersThisWeek = weekEnd - weekStart + 1;
+  if (chaptersThisWeek <= 0) return '';
+
+  // Internal pacing algorithm — not shown to users
+  // Calculate how far through the week we are (0–1)
+  const dueDate = new Date(currentWeek.due);
+  const weekStartDate = new Date(dueDate);
+  weekStartDate.setDate(weekStartDate.getDate() - 6);
+  const totalMs = dueDate - weekStartDate;
+  const elapsedMs = Math.max(0, today - weekStartDate);
+  const weekProgress = Math.min(1, elapsedMs / totalMs);
+
+  // Expected chapters by now (linear interpolation through the week)
+  const expectedByNow = weekStart + (chaptersThisWeek * weekProgress) - 1;
+
+  // How far ahead/behind relative to expected
+  const delta = myChap - expectedByNow;
+
+  // Thresholds: generous green, gentle yellow, only red when truly behind
+  let level, label;
+  if (myChap >= weekEnd) {
+    level = 'on-track'; label = 'All caught up for this week';
+  } else if (delta >= -0.5) {
+    level = 'on-track'; label = 'On track';
+  } else if (delta >= -2) {
+    level = 'nudge'; label = 'A little reading to catch up on';
+  } else {
+    level = 'behind'; label = 'Some reading to do this week';
+  }
+
+  return `<div class="pace-indicator ${level}"><span class="pace-dot"></span>${label}</div>`;
+}
+
+function renderSchedule(book) {
+  const schedule = book.schedule || [];
+  const today = new Date();
+  const showAll = state._showAllWeeks;
+  const visible = showAll ? schedule : schedule.slice(0, 4);
+
+  let html = `<div class="section-title">The Schedule</div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--text-dim);margin-bottom:12px">Weighted by page count, not chapter count, so the weeks land roughly even. Anything past where you are is dimmed.</div>`;
+
+  visible.forEach(week => {
+    const due = new Date(week.due);
+    const isPast = due < today;
+    const isCurrent = !isPast && schedule.findIndex(w => new Date(w.due) >= today) === schedule.indexOf(week);
+    const dotClass = isPast ? 'done' : isCurrent ? 'current' : 'future';
+    const itemClass = isPast ? 'past' : '';
+
+    html += `<div class="schedule-item ${itemClass}">
+      <div class="schedule-dot ${dotClass}"></div>
+      <div class="schedule-text">
+        <div class="schedule-chapters">Chapters ${week.chapters || (week.start + '–' + week.end)}</div>
+        <div class="schedule-date">${formatDate(week.due)}</div>
+      </div>
+    </div>`;
+  });
+
+  if (!showAll && schedule.length > 4) {
+    html += `<button class="btn btn-outline btn-small mt-8" onclick="state._showAllWeeks=true;render()">Show all ${schedule.length} weeks</button>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderBookList(items, owner) {
+  const cap = owner === 'ari' ? 'Ari' : 'Eric';
+  let html = '<div class="card">';
+  if (items.length === 0) {
+    html += `<div class="empty-text">Nothing yet. Whatever lands here becomes a one-tap shortcut when it is ${cap}'s turn.</div>`;
+  }
+  items.forEach(item => {
+    html += `<div class="list-item">
+      <span>${esc(item.title)}</span>
+      <button class="remove-btn" onclick="removeFromQueue('${item.id}','hobbiton_books')">✕</button>
+    </div>`;
+  });
+  html += `<div class="add-row">
+    <input type="text" placeholder="Add a title" id="add-book-${owner}" onkeydown="if(event.key==='Enter')addToBookQueue('${owner}')">
+    <button class="add-btn" onclick="addToBookQueue('${owner}')">+</button>
+  </div></div>`;
+  return html;
+}
+
+// ============================================
+// HISTORY TAB
+// ============================================
+function renderHistory() {
+  const shows = state.shows.filter(s => s.status === 'finished');
+  const movies = state.movies.filter(m => m.status === 'watched').sort((a,b) => new Date(b.watched_date) - new Date(a.watched_date));
+  const books = state.books.filter(b => b.status === 'finished');
+  const tab = state.historySubTab;
+
+  let html = `<div class="history-tabs">
+    <button class="history-tab ${tab==='shows'?'active':''}" onclick="state.historySubTab='shows';render()">Shows ${shows.length}</button>
+    <button class="history-tab ${tab==='movies'?'active':''}" onclick="state.historySubTab='movies';render()">Movies ${movies.length}</button>
+    <button class="history-tab ${tab==='books'?'active':''}" onclick="state.historySubTab='books';render()">Books</button>
+  </div>`;
+
+  if (tab === 'shows') {
+    shows.forEach(s => {
+      const duration = s.started_at && s.finished_at ? dateDiffText(s.started_at, s.finished_at) : '';
+      html += `<div class="history-entry">
+        <div class="history-title">${esc(s.name)}</div>
+        <div class="history-meta">${formatDate(s.started_at)} → ${formatDate(s.finished_at)}${duration ? ' · in ' + duration : ''} · ${s.show_type === 'serious' ? 'Serious show' : 'Comfort show'}</div>
+        ${renderHistoryRating('ari', s.rating_ari, s.review_ari)}
+        ${renderHistoryRating('eric', s.rating_eric, s.review_eric)}
+        <div class="btn-row">
+          <button class="btn btn-outline btn-small" onclick="openEditRating('show','${s.id}')">✎ Edit your rating</button>
+          <button class="btn btn-outline btn-small" onclick="openEditDates('show','${s.id}')">Dates</button>
+          <button class="btn btn-outline btn-small" onclick="unlogShow('${s.id}')">🗑 Un-log</button>
+        </div>
+      </div>`;
+    });
+    if (shows.length === 0) html += '<div class="empty-text text-center">No finished shows yet.</div>';
+  }
+
+  if (tab === 'movies') {
+    movies.forEach(m => {
+      const cap = n => n.charAt(0).toUpperCase() + n.slice(1);
+      html += `<div class="history-entry">
+        ${m.poster_path ? `<img class="history-poster" src="${TMDB_IMG}${m.poster_path}" alt="">` : ''}
+        <div class="history-title">${esc(m.title)}</div>
+        <div class="history-meta">${formatDate(m.watched_date)} · ${cap(m.picked_by)}'s pick${m.runtime ? ' · ' + m.runtime + ' min' : ''}</div>
+        ${renderHistoryRating('ari', m.rating_ari, m.review_ari)}
+        ${renderHistoryRating('eric', m.rating_eric, m.review_eric)}
+        <div class="btn-row">
+          <button class="btn btn-outline btn-small" onclick="openEditRating('movie','${m.id}')">✎ Edit your rating</button>
+          <button class="btn btn-outline btn-small" onclick="openEditDates('movie','${m.id}')">Dates</button>
+          <button class="btn btn-outline btn-small" onclick="unlogMovie('${m.id}')">🗑 Un-log</button>
+        </div>
+      </div>`;
+    });
+    if (movies.length === 0) html += '<div class="empty-text text-center">No watched movies yet.</div>';
+  }
+
+  if (tab === 'books') {
+    books.forEach(b => {
+      html += `<div class="history-entry">
+        <div class="history-title">${esc(b.title)}</div>
+        <div class="history-meta">${b.author ? esc(b.author) + ' · ' : ''}${formatDate(b.started_at)} → ${formatDate(b.finished_at)}</div>
+        ${renderHistoryRating('ari', b.rating_ari, b.review_ari)}
+        ${renderHistoryRating('eric', b.rating_eric, b.review_eric)}
+      </div>`;
+    });
+    if (books.length === 0) html += '<div class="empty-text text-center">No finished books yet.</div>';
+  }
+
+  // Export button
+  html += `<div class="export-row mt-16">
+    <button class="btn btn-outline btn-small" onclick="exportData()">📥 Export JSON</button>
+    <button class="btn btn-outline btn-small" onclick="openWrapped()">🎉 Year in Review</button>
+  </div>`;
+
+  return html;
+}
+
+function renderHistoryRating(person, rating, review) {
+  if (!rating && !review) return '';
+  const cap = person === 'ari' ? 'ARI' : 'ERIC';
+  const ratingText = rating ? (rating === 'loved' ? 'Loved it' : rating === 'liked' ? 'Liked it' : "Didn't like it") : '';
+  return `<div style="margin-top:8px">
+    <span class="history-person ${person}">${cap}</span>
+    ${ratingText ? `<span class="rating-badge ${rating}">${ratingText}</span>` : ''}
+    ${review ? `<div class="history-review">${esc(review)}</div>` : ''}
+  </div>`;
+}
+
+// ============================================
+// SUPABASE GUARD
+// ============================================
+function requireSupabase() {
+  if (!sbClient) {
+    showToast('Still connecting to database...');
+    return false;
+  }
+  return true;
+}
+
+// ============================================
+// ACTIONS — Shows
+// ============================================
+async function advanceEpisode(id) {
+  if (!requireSupabase()) return;
+  const show = state.shows.find(s => s.id === id);
+  if (!show) return;
+
+  let newEp = show.episode + 1;
+  let newSeason = show.season;
+  let newTotal = show.total_episodes;
+  let seasonFinished = false;
+
+  if (newEp > show.total_episodes) {
+    // Check seasons_data for auto-jump
+    const seasons = show.seasons_data || [];
+    const nextSeason = seasons.find(s => s.season === show.season + 1);
+    if (nextSeason) {
+      newSeason = nextSeason.season;
+      newEp = 1;
+      newTotal = nextSeason.episodes;
+      seasonFinished = true;
+    } else {
+      // No more seasons — this finishes the show
+      finishShow(id);
+      return;
+    }
+  }
+
+  await sbClient.from('hobbiton_shows').update({
+    episode: newEp, season: newSeason, total_episodes: newTotal
+  }).eq('id', id);
+
+  if (seasonFinished) {
+    showToast(`Season ${show.season} complete! On to Season ${newSeason}!`);
+    fireConfetti();
+  }
+
+  loadAllData();
+}
+
+async function finishShow(id) {
+  if (!requireSupabase()) return;
+  const show = state.shows.find(s => s.id === id);
+  if (!show) return;
+
+  await sbClient.from('hobbiton_shows').update({
+    status: 'finished',
+    finished_at: new Date().toISOString().split('T')[0]
+  }).eq('id', id);
+
+  showToast(`${show.name} finished!`);
+  fireConfetti();
+
+  // Auto-promote first in queue
+  const queue = state.shows.filter(s => s.show_type === show.show_type && s.status === 'queued').sort((a,b) => a.queue_position - b.queue_position);
+  if (queue.length > 0 && (show.show_type === 'serious' || state.shows.filter(s => s.show_type === 'comfort' && s.status === 'active').length <= 1)) {
+    await sbClient.from('hobbiton_shows').update({
+      status: 'active', season: 1, episode: 0, started_at: new Date().toISOString().split('T')[0]
+    }).eq('id', queue[0].id);
+  }
+
+  loadAllData();
+  // Open rating modal after a moment
+  setTimeout(() => openEditRating('show', id), 500);
+}
+
+async function addToShowQueue(type) {
+  if (!requireSupabase()) return;
+  const input = document.getElementById(`add-queue-${type}`);
+  const name = input.value.trim();
+  if (!name) return;
+  const existing = state.shows.filter(s => s.show_type === type && s.status === 'queued');
+  await sbClient.from('hobbiton_shows').insert({
+    name, show_type: type, status: 'queued', queue_position: existing.length + 1
+  });
+  input.value = '';
+  loadAllData();
+}
+
+async function activateFromQueue(type) {
+  if (!requireSupabase()) return;
+  const queue = state.shows.filter(s => s.show_type === type && s.status === 'queued').sort((a,b) => a.queue_position - b.queue_position);
+  if (queue.length === 0) { showToast('Queue is empty'); return; }
+  const first = queue[0];
+  // Open edit modal to set season/episode info before activating
+  openEditShow(first.id, true);
+}
+
+function openEditShow(id, activating = false) {
+  const show = state.shows.find(s => s.id === id);
+  if (!show) return;
+  const seasons = show.seasons_data || [];
+
+  let seasonsHtml = '';
+  const numSeasons = Math.max(seasons.length, 1);
+  for (let i = 0; i < numSeasons; i++) {
+    const s = seasons[i] || { season: i + 1, episodes: 10 };
+    seasonsHtml += `<div class="season-row"><label>S${s.season}</label><input type="number" value="${s.episodes}" min="1" id="season-eps-${i}" data-season="${s.season}"> eps</div>`;
+  }
+
+  showModal(`
+    <h3>${activating ? 'Activate' : 'Edit'}: ${esc(show.name)}</h3>
+    <label>Show name</label>
+    <input type="text" value="${esc(show.name)}" id="edit-show-name">
+    <label>Current season</label>
+    <input type="number" value="${show.season}" min="1" id="edit-show-season">
+    <label>Current episode</label>
+    <input type="number" value="${show.episode}" min="0" id="edit-show-episode">
+    <label>Episodes per season</label>
+    <div class="season-inputs" id="season-inputs">${seasonsHtml}</div>
+    <div class="btn-row">
+      <button class="btn btn-outline btn-small" onclick="addSeasonRow()">+ Add season</button>
+    </div>
+    <button class="btn btn-primary" onclick="saveEditShow('${id}', ${activating})">${activating ? 'Activate Show' : 'Save'}</button>
+  `);
+}
+
+function addSeasonRow() {
+  const container = document.getElementById('season-inputs');
+  const count = container.children.length;
+  const div = document.createElement('div');
+  div.className = 'season-row';
+  div.innerHTML = `<label>S${count + 1}</label><input type="number" value="10" min="1" id="season-eps-${count}" data-season="${count+1}"> eps`;
+  container.appendChild(div);
+}
+
+async function saveEditShow(id, activating) {
+  if (!requireSupabase()) return;
+  const name = document.getElementById('edit-show-name').value.trim();
+  const season = parseInt(document.getElementById('edit-show-season').value) || 1;
+  const episode = parseInt(document.getElementById('edit-show-episode').value) || 0;
+
+  const seasonInputs = document.querySelectorAll('#season-inputs input');
+  const seasonsData = Array.from(seasonInputs).map(input => ({
+    season: parseInt(input.dataset.season),
+    episodes: parseInt(input.value) || 10
+  }));
+
+  const currentSeasonData = seasonsData.find(s => s.season === season);
+  const totalEps = currentSeasonData ? currentSeasonData.episodes : (parseInt(seasonInputs[0]?.value) || 10);
+
+  const update = {
+    name, season, episode, total_episodes: totalEps, seasons_data: seasonsData
+  };
+  if (activating) {
+    update.status = 'active';
+    update.started_at = new Date().toISOString().split('T')[0];
+  }
+
+  await sbClient.from('hobbiton_shows').update(update).eq('id', id);
+  closeModal();
+  loadAllData();
+}
+
+// ============================================
+// ACTIONS — Movies
+// ============================================
+function openLogMovie() {
+  const turn = state.settings?.movie_turn || 'ari';
+  const queue = state.movies.filter(m => m.status === 'queued' && m.queue_owner === turn).sort((a,b) => a.queue_position - b.queue_position);
+
+  let quickPicks = '';
+  if (queue.length > 0) {
+    quickPicks = `<div style="margin-bottom:16px"><div style="font-size:13px;color:var(--text-dim);margin-bottom:8px">Quick pick from your list:</div>`;
+    queue.forEach(m => {
+      quickPicks += `<div class="tmdb-result" onclick="logMovieFromQueue('${m.id}')">
+        ${m.poster_path ? `<img class="tmdb-poster-small" src="${TMDB_IMG}${m.poster_path}">` : '<div class="tmdb-poster-small"></div>'}
+        <div class="tmdb-info"><div class="tmdb-title">${esc(m.title)}</div></div>
+      </div>`;
+    });
+    quickPicks += '</div><div style="border-bottom:1px solid var(--card-border);margin-bottom:12px"></div>';
+  }
+
+  showModal(`
+    <h3>Log a movie night</h3>
+    ${quickPicks}
+    <label>Search for a movie</label>
+    <input type="text" placeholder="Movie title..." id="log-movie-search" oninput="searchTMDB(this.value,'log-movie-results')">
+    <div class="tmdb-results" id="log-movie-results"></div>
+    <div style="border-top:1px solid var(--card-border);margin-top:12px;padding-top:12px">
+      <label>Or type a title manually</label>
+      <input type="text" placeholder="Movie title" id="log-movie-manual">
+      <button class="btn btn-outline mt-8" onclick="logMovieManual()">Log it</button>
+    </div>
+  `);
+}
+
+async function logMovieFromQueue(queueId) {
+  if (!requireSupabase()) return;
+  const movie = state.movies.find(m => m.id === queueId);
+  if (!movie) return;
+  closeModal();
+
+  await sbClient.from('hobbiton_movies').update({
+    status: 'watched',
+    picked_by: state.settings.movie_turn,
+    watched_date: new Date().toISOString().split('T')[0],
+    queue_owner: null
+  }).eq('id', queueId);
+
+  // Advance turn
+  await advanceMovieTurn();
+  loadAllData();
+  setTimeout(() => openEditRating('movie', queueId), 400);
+}
+
+async function logMovieManual() {
+  if (!requireSupabase()) return;
+  const title = document.getElementById('log-movie-manual').value.trim();
+  if (!title) return;
+  closeModal();
+
+  const turn = state.settings?.movie_turn || 'ari';
+  const { data } = await sbClient.from('hobbiton_movies').insert({
+    title, status: 'watched', picked_by: turn,
+    watched_date: new Date().toISOString().split('T')[0]
+  }).select().single();
+
+  await advanceMovieTurn();
+  loadAllData();
+  if (data) setTimeout(() => openEditRating('movie', data.id), 400);
+}
+
+let _pendingTmdbMovie = null;
+
+async function searchTMDB(query, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  if (query.length < 2) { container.innerHTML = ''; return; }
+
+  if (!TMDB_API_KEY || TMDB_API_KEY === 'YOUR_TMDB_API_KEY') {
+    container.innerHTML = '<div class="empty-text">TMDB API key not configured</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${TMDB_API}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    container.innerHTML = (data.results || []).slice(0, 6).map(m => {
+      const year = m.release_date ? m.release_date.substring(0, 4) : '';
+      const poster = m.poster_path ? `${TMDB_IMG}${m.poster_path}` : '';
+      return `<div class="tmdb-result" onclick='selectTMDB(${JSON.stringify({
+        id: m.id, title: m.title, year, poster_path: m.poster_path,
+        overview: (m.overview||'').substring(0,200)
+      }).replace(/'/g,"&#39;")}, "${containerId}")'>
+        ${poster ? `<img class="tmdb-poster-small" src="${poster}">` : '<div class="tmdb-poster-small"></div>'}
+        <div class="tmdb-info">
+          <div class="tmdb-title">${esc(m.title)}</div>
+          <div class="tmdb-year">${year}</div>
+        </div>
+      </div>`;
+    }).join('') || '<div class="empty-text">No results</div>';
+  } catch(e) {
+    container.innerHTML = '<div class="empty-text">Search failed</div>';
+  }
+}
+
+async function selectTMDB(movie, containerId) {
+  if (!requireSupabase()) return;
+  // Fetch full details for genres and runtime
+  let genres = '', runtime = 0;
+  try {
+    const res = await fetch(`${TMDB_API}/movie/${movie.id}?api_key=${TMDB_API_KEY}`);
+    const d = await res.json();
+    genres = (d.genres || []).map(g => g.name).join(', ');
+    runtime = d.runtime || 0;
+  } catch(e) {}
+
+  if (containerId.startsWith('log-movie')) {
+    // Logging a movie
+    closeModal();
+    const turn = state.settings?.movie_turn || 'ari';
+    const { data } = await sbClient.from('hobbiton_movies').insert({
+      title: movie.title, status: 'watched', picked_by: turn,
+      watched_date: new Date().toISOString().split('T')[0],
+      tmdb_id: movie.id, poster_path: movie.poster_path,
+      genres, runtime, release_year: parseInt(movie.year) || null,
+      overview: movie.overview
+    }).select().single();
+
+    await advanceMovieTurn();
+    loadAllData();
+    if (data) setTimeout(() => openEditRating('movie', data.id), 400);
+  } else {
+    // Adding to a queue
+    const owner = containerId.replace('movie-results-', '');
+    const existing = state.movies.filter(m => m.status === 'queued' && m.queue_owner === owner);
+    await sbClient.from('hobbiton_movies').insert({
+      title: movie.title, status: 'queued', queue_owner: owner,
+      queue_position: existing.length + 1,
+      tmdb_id: movie.id, poster_path: movie.poster_path,
+      genres, runtime, release_year: parseInt(movie.year) || null,
+      overview: movie.overview
+    });
+    document.getElementById(`add-movie-${owner}`).value = '';
+    document.getElementById(containerId).innerHTML = '';
+    loadAllData();
+  }
+}
+
+async function addToMovieQueue(owner) {
+  if (!requireSupabase()) return;
+  const input = document.getElementById(`add-movie-${owner}`);
+  const title = input.value.trim();
+  if (!title) return;
+  const existing = state.movies.filter(m => m.status === 'queued' && m.queue_owner === owner);
+  await sbClient.from('hobbiton_movies').insert({
+    title, status: 'queued', queue_owner: owner, queue_position: existing.length + 1
+  });
+  input.value = '';
+  const resultsEl = document.getElementById(`movie-results-${owner}`);
+  if (resultsEl) resultsEl.innerHTML = '';
+  loadAllData();
+}
+
+async function dropShow(id) {
+  if (!requireSupabase()) return;
+  const show = state.shows.find(s => s.id === id);
+  if (!show) return;
+  if (!confirm(`Drop "${show.name}"? This will remove it entirely (not mark as finished).`)) return;
+  await sbClient.from('hobbiton_shows').delete().eq('id', id);
+  loadAllData();
+}
+
+async function unlogShow(id) {
+  if (!requireSupabase()) return;
+  const show = state.shows.find(s => s.id === id);
+  if (!show) return;
+  if (!confirm(`Un-log "${show.name}"? This will remove it from your history.`)) return;
+  await sbClient.from('hobbiton_shows').delete().eq('id', id);
+  loadAllData();
+}
+
+async function unlogMovie(id) {
+  if (!requireSupabase()) return;
+  const movie = state.movies.find(m => m.id === id);
+  if (!movie) return;
+  if (!confirm(`Un-log "${movie.title}"? The turn will go back to ${movie.picked_by}.`)) return;
+
+  await sbClient.from('hobbiton_movies').delete().eq('id', id);
+  // Revert turn
+  await sbClient.from('hobbiton_settings').update({ movie_turn: movie.picked_by }).eq('id', 1);
+  loadAllData();
+}
+
+async function advanceMovieTurn() {
+  const current = state.settings?.movie_turn || 'ari';
+  const next = current === 'ari' ? 'eric' : 'ari';
+  await sbClient.from('hobbiton_settings').update({ movie_turn: next }).eq('id', 1);
+}
+
+async function forfeitTurn() {
+  if (!requireSupabase()) return;
+  const turn = state.settings?.movie_turn || 'ari';
+  const other = turn === 'ari' ? 'eric' : 'ari';
+  const bankKey = `forfeit_bank_${turn}`;
+  const newBank = (state.settings?.[bankKey] || 0) + 1;
+
+  await sbClient.from('hobbiton_settings').update({
+    movie_turn: other,
+    [bankKey]: newBank
+  }).eq('id', 1);
+
+  showToast(`${turn === 'ari' ? 'Ari' : 'Eric'} forfeited. Banked turn: ${newBank}`);
+  loadAllData();
+}
+
+// ============================================
+// LET FATE DECIDE — Slot Machine
+// ============================================
+function letFateDecide() {
+  const turn = state.settings?.movie_turn || 'ari';
+  const queue = state.movies.filter(m => m.status === 'queued' && m.queue_owner === turn);
+  const otherQueue = state.movies.filter(m => m.status === 'queued' && m.queue_owner === (turn === 'ari' ? 'eric' : 'ari'));
+  const allQueued = [...queue, ...otherQueue];
+
+  if (allQueued.length < 2) {
+    showToast('Need at least 2 movies in the lists!');
+    return;
+  }
+
+  const pick = allQueued[Math.floor(Math.random() * allQueued.length)];
+
+  // Build slot items — repeat the list several times for scrolling effect
+  const items = [];
+  for (let i = 0; i < 30; i++) {
+    items.push(allQueued[i % allQueued.length].title);
+  }
+  // Place the pick near the end
+  items[items.length - 3] = pick.title;
+
+  const slotHtml = items.map(t => `<div class="slot-item">${esc(t)}</div>`).join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'slot-overlay';
+  overlay.innerHTML = `
+    <div class="slot-label">Let fate decide...</div>
+    <div class="slot-machine"><div class="slot-reel" id="slot-reel">${slotHtml}</div></div>
+    <div class="slot-result" id="slot-result">${esc(pick.title)}</div>
+    <button class="btn btn-primary mt-16" id="slot-close" style="display:none" onclick="this.parentElement.remove()">Got it!</button>
+  `;
+  document.body.appendChild(overlay);
+
+  // Animate
+  requestAnimationFrame(() => {
+    const reel = document.getElementById('slot-reel');
+    const targetOffset = (items.length - 3) * 80;
+    reel.style.transform = `translateY(-${targetOffset}px)`;
+
+    setTimeout(() => {
+      document.getElementById('slot-result').classList.add('show');
+      document.getElementById('slot-close').style.display = '';
+    }, 3200);
+  });
+}
+
+// ============================================
+// ACTIONS — Books
+// ============================================
+async function advanceChapter() {
+  if (!requireSupabase()) return;
+  const book = state.books.find(b => b.status === 'reading');
+  if (!book) return;
+
+  const field = state.currentUser === 'eric' ? 'chapter_eric' : 'chapter_ari';
+  const current = state.currentUser === 'eric' ? book.chapter_eric : book.chapter_ari;
+  const newChap = current + 1;
+
+  if (newChap > book.total_chapters) {
+    showToast('Already at the last chapter!');
+    return;
+  }
+
+  await sbClient.from('hobbiton_books').update({ [field]: newChap }).eq('id', book.id);
+
+  // Check if both finished
+  const otherField = state.currentUser === 'eric' ? 'chapter_ari' : 'chapter_eric';
+  const otherChap = state.currentUser === 'eric' ? book.chapter_ari : book.chapter_eric;
+  if (newChap >= book.total_chapters && otherChap >= book.total_chapters) {
+    await sbClient.from('hobbiton_books').update({
+      status: 'finished', finished_at: new Date().toISOString().split('T')[0]
+    }).eq('id', book.id);
+    showToast(`Finished ${book.title}!`);
+    fireConfetti();
+  }
+
+  loadAllData();
+}
+
+function openJumpChapter() {
+  const book = state.books.find(b => b.status === 'reading');
+  if (!book) return;
+  const current = state.currentUser === 'eric' ? book.chapter_eric : book.chapter_ari;
+
+  showModal(`
+    <h3>Jump to chapter</h3>
+    <label>Chapter number (currently at ${current})</label>
+    <input type="number" value="${current}" min="0" max="${book.total_chapters}" id="jump-chapter-num">
+    <button class="btn btn-primary" onclick="doJumpChapter('${book.id}')">Jump</button>
+  `);
+}
+
+async function doJumpChapter(bookId) {
+  if (!requireSupabase()) return;
+  const num = parseInt(document.getElementById('jump-chapter-num').value) || 0;
+  const field = state.currentUser === 'eric' ? 'chapter_eric' : 'chapter_ari';
+  await sbClient.from('hobbiton_books').update({ [field]: num }).eq('id', bookId);
+  closeModal();
+  loadAllData();
+}
+
+async function addToBookQueue(owner) {
+  if (!requireSupabase()) return;
+  const input = document.getElementById(`add-book-${owner}`);
+  const title = input.value.trim();
+  if (!title) return;
+  await sbClient.from('hobbiton_books').insert({
+    title, status: 'queued', queue_owner: owner
+  });
+  input.value = '';
+  loadAllData();
+}
+
+// ============================================
+// QUEUE REORDERING
+// ============================================
+async function moveQueue(id, direction, table) {
+  if (!requireSupabase()) return;
+  const items = table === 'hobbiton_shows'
+    ? state.shows.filter(s => s.status === 'queued')
+    : state.movies.filter(m => m.status === 'queued');
+
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  // Find siblings (same type/owner)
+  let siblings;
+  if (table === 'hobbiton_shows') {
+    siblings = items.filter(i => i.show_type === item.show_type).sort((a,b) => a.queue_position - b.queue_position);
+  } else {
+    siblings = items.filter(i => i.queue_owner === item.queue_owner).sort((a,b) => a.queue_position - b.queue_position);
+  }
+
+  const idx = siblings.findIndex(s => s.id === id);
+  const swapIdx = idx + direction;
+  if (swapIdx < 0 || swapIdx >= siblings.length) return;
+
+  const swapItem = siblings[swapIdx];
+  const tempPos = item.queue_position;
+
+  await Promise.all([
+    sbClient.from(table).update({ queue_position: swapItem.queue_position }).eq('id', id),
+    sbClient.from(table).update({ queue_position: tempPos }).eq('id', swapItem.id)
+  ]);
+
+  loadAllData();
+}
+
+async function removeFromQueue(id, table) {
+  if (!requireSupabase()) return;
+  await sbClient.from(table).delete().eq('id', id);
+  loadAllData();
+}
+
+// ============================================
+// RATING MODAL
+// ============================================
+function openEditRating(type, id) {
+  const table = type === 'show' ? 'hobbiton_shows' : type === 'movie' ? 'hobbiton_movies' : 'hobbiton_books';
+  const items = type === 'show' ? state.shows : type === 'movie' ? state.movies : state.books;
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  const ratingField = `rating_${state.currentUser}`;
+  const reviewField = `review_${state.currentUser}`;
+  const currentRating = item[ratingField] || '';
+  const currentReview = item[reviewField] || '';
+
+  const ratings = ['loved', 'liked', 'disliked'];
+  const ratingLabels = { loved: 'Loved it', liked: 'Liked it', disliked: "Didn't like it" };
+
+  showModal(`
+    <h3>${esc(item.title || item.name)}</h3>
+    <label>Your rating</label>
+    <div class="rating-options">
+      ${ratings.map(r => `<button class="rating-option ${currentRating===r?'selected':''}" onclick="document.querySelectorAll('.rating-option').forEach(b=>b.classList.remove('selected'));this.classList.add('selected');this.dataset.val='${r}'" data-val="${r}">${ratingLabels[r]}</button>`).join('')}
+    </div>
+    <label>Review</label>
+    <textarea id="edit-review" placeholder="What did you think?">${esc(currentReview)}</textarea>
+    <button class="btn btn-primary" onclick="saveRating('${table}','${id}')">Save</button>
+  `);
+}
+
+async function saveRating(table, id) {
+  if (!requireSupabase()) return;
+  const selected = document.querySelector('.rating-option.selected');
+  const rating = selected ? selected.dataset.val : null;
+  const review = document.getElementById('edit-review').value.trim();
+
+  const ratingField = `rating_${state.currentUser}`;
+  const reviewField = `review_${state.currentUser}`;
+
+  await sbClient.from(table).update({
+    [ratingField]: rating,
+    [reviewField]: review || null
+  }).eq('id', id);
+
+  closeModal();
+  loadAllData();
+}
+
+function openEditDates(type, id) {
+  const table = type === 'show' ? 'hobbiton_shows' : type === 'movie' ? 'hobbiton_movies' : 'hobbiton_books';
+  const items = type === 'show' ? state.shows : type === 'movie' ? state.movies : state.books;
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  const startDate = item.started_at || item.watched_date || '';
+  const endDate = item.finished_at || '';
+
+  showModal(`
+    <h3>Edit dates</h3>
+    ${type !== 'movie' ? `<label>Started</label><input type="date" value="${startDate}" id="edit-start-date">` : ''}
+    <label>${type === 'movie' ? 'Watched date' : 'Finished'}</label>
+    <input type="date" value="${type === 'movie' ? startDate : endDate}" id="edit-end-date">
+    <button class="btn btn-primary" onclick="saveDates('${table}','${id}','${type}')">Save</button>
+  `);
+}
+
+async function saveDates(table, id, type) {
+  if (!requireSupabase()) return;
+  const update = {};
+  if (type === 'movie') {
+    update.watched_date = document.getElementById('edit-end-date').value || null;
+  } else {
+    update.started_at = document.getElementById('edit-start-date').value || null;
+    update.finished_at = document.getElementById('edit-end-date').value || null;
+  }
+  await sbClient.from(table).update(update).eq('id', id);
+  closeModal();
+  loadAllData();
+}
+
+// ============================================
+// SETTINGS
+// ============================================
+function openSettings() {
+  const s = state.settings || {};
+  showModal(`
+    <h3>Settings</h3>
+    <div class="settings-section">
+      <label>Passcode</label>
+      <input type="text" value="${esc(s.passcode || '1234')}" id="settings-passcode">
+      <label>Current movie turn</label>
+      <select id="settings-turn">
+        <option value="ari" ${s.movie_turn==='ari'?'selected':''}>Ari</option>
+        <option value="eric" ${s.movie_turn==='eric'?'selected':''}>Eric</option>
+      </select>
+      <label>Forfeit bank (Ari)</label>
+      <input type="number" value="${s.forfeit_bank_ari || 0}" id="settings-bank-ari" min="0">
+      <label>Forfeit bank (Eric)</label>
+      <input type="number" value="${s.forfeit_bank_eric || 0}" id="settings-bank-eric" min="0">
+    </div>
+    <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    <div class="mt-16">
+      <button class="btn btn-outline btn-small" onclick="switchIdentity()">Switch identity (currently: ${state.currentUser === 'ari' ? 'Ari' : 'Eric'})</button>
+    </div>
+  `);
+}
+
+async function saveSettings() {
+  if (!requireSupabase()) return;
+  await sbClient.from('hobbiton_settings').update({
+    passcode: document.getElementById('settings-passcode').value,
+    movie_turn: document.getElementById('settings-turn').value,
+    forfeit_bank_ari: parseInt(document.getElementById('settings-bank-ari').value) || 0,
+    forfeit_bank_eric: parseInt(document.getElementById('settings-bank-eric').value) || 0
+  }).eq('id', 1);
+  closeModal();
+  showToast('Settings saved');
+  loadAllData();
+}
+
+function switchIdentity() {
+  closeModal();
+  localStorage.removeItem('hobbiton-user');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('bottom-nav').classList.add('hidden');
+  document.getElementById('identity-picker').classList.remove('hidden');
+}
+
+// ============================================
+// YEAR IN REVIEW / WRAPPED
+// ============================================
+function openWrapped() {
+  const movies = state.movies.filter(m => m.status === 'watched');
+  const comfortShows = state.shows.filter(s => s.status === 'finished' && s.show_type === 'comfort');
+  const seriousShows = state.shows.filter(s => s.status === 'finished' && s.show_type === 'serious');
+  const allShows = [...comfortShows, ...seriousShows];
+  const books = state.books.filter(b => b.status === 'finished');
+
+  // Movie stats
+  const totalRuntime = movies.reduce((sum, m) => sum + (m.runtime || 0), 0);
+  const avgRuntime = movies.length > 0 ? Math.round(totalRuntime / movies.length) : 0;
+  const ariMoviePicks = movies.filter(m => m.picked_by === 'ari').length;
+  const ericMoviePicks = movies.filter(m => m.picked_by === 'eric').length;
+  const lovedMovies = movies.filter(m => m.rating_ari === 'loved' || m.rating_eric === 'loved').length;
+  const genreCounts = {};
+  movies.forEach(m => {
+    if (m.genres) m.genres.split(', ').forEach(g => { genreCounts[g] = (genreCounts[g] || 0) + 1; });
+  });
+  const topGenre = Object.entries(genreCounts).sort((a,b) => b[1] - a[1])[0];
+
+  // Show rating helper
+  const ratingEmoji = r => r === 'loved' ? '❤️' : r === 'liked' ? '👍' : r === 'disliked' ? '👎' : '';
+
+  // Build movie list summary
+  const movieList = movies.sort((a,b) => new Date(b.watched_date) - new Date(a.watched_date))
+    .map(m => `<div class="wrapped-stat"><span class="wrapped-stat-label">${esc(m.title)}</span><span class="wrapped-stat-value">${ratingEmoji(m.rating_ari)} ${ratingEmoji(m.rating_eric)}${m.runtime ? ' · ' + m.runtime + 'm' : ''}</span></div>`).join('');
+
+  // Build comfort show list
+  const comfortList = comfortShows.map(s => {
+    return `<div class="wrapped-stat"><span class="wrapped-stat-label">${esc(s.name)}</span><span class="wrapped-stat-value">${ratingEmoji(s.rating_ari)} ${ratingEmoji(s.rating_eric)}</span></div>`;
+  }).join('') || '<div class="empty-text">None yet</div>';
+
+  // Build serious show list
+  const seriousList = seriousShows.map(s => {
+    return `<div class="wrapped-stat"><span class="wrapped-stat-label">${esc(s.name)}</span><span class="wrapped-stat-value">${ratingEmoji(s.rating_ari)} ${ratingEmoji(s.rating_eric)}</span></div>`;
+  }).join('') || '<div class="empty-text">None yet</div>';
+
+  // Build book list
+  const bookList = books.map(b => {
+    const picker = b.picked_by ? (b.picked_by === 'ari' ? "Ari's pick" : "Eric's pick") : '';
+    return `<div class="wrapped-stat"><span class="wrapped-stat-label">${esc(b.title)}</span><span class="wrapped-stat-value">${ratingEmoji(b.rating_ari)} ${ratingEmoji(b.rating_eric)}${picker ? ' · ' + picker : ''}</span></div>`;
+  }).join('') || '<div class="empty-text">None yet</div>';
+
+  showModal(`
+    <div class="wrapped-card">
+      <div class="slot-label" style="margin-bottom:16px">🎉 Year in Review</div>
+      <div class="wrapped-big-number">${movies.length + allShows.length + books.length}</div>
+      <div class="wrapped-label">Total things watched & read</div>
+    </div>
+
+    <div class="section-title" style="margin-top:20px">🎬 Movies (${movies.length})</div>
+    <div class="card">
+      <div class="wrapped-stat"><span class="wrapped-stat-label">Total runtime</span><span class="wrapped-stat-value">${totalRuntime > 0 ? Math.round(totalRuntime/60) + ' hrs ' + (totalRuntime%60) + ' min' : '—'}</span></div>
+      <div class="wrapped-stat"><span class="wrapped-stat-label">Avg runtime</span><span class="wrapped-stat-value">${avgRuntime > 0 ? avgRuntime + ' min' : '—'}</span></div>
+      <div class="wrapped-stat"><span class="wrapped-stat-label">Ari's picks</span><span class="wrapped-stat-value">${ariMoviePicks}</span></div>
+      <div class="wrapped-stat"><span class="wrapped-stat-label">Eric's picks</span><span class="wrapped-stat-value">${ericMoviePicks}</span></div>
+      <div class="wrapped-stat"><span class="wrapped-stat-label">Loved it count</span><span class="wrapped-stat-value">${lovedMovies}</span></div>
+      ${topGenre ? `<div class="wrapped-stat"><span class="wrapped-stat-label">Top genre</span><span class="wrapped-stat-value">${topGenre[0]}</span></div>` : ''}
+      <div style="border-top:1px solid var(--card-border);margin:12px 0;padding-top:8px"></div>
+      ${movieList}
+    </div>
+
+    <div class="section-title">📺 Comfort TV (${comfortShows.length})</div>
+    <div class="card">${comfortList}</div>
+
+    <div class="section-title green">📺 Serious TV (${seriousShows.length})</div>
+    <div class="card">${seriousList}</div>
+
+    <div class="section-title">📚 Books (${books.length})</div>
+    <div class="card">${bookList}</div>
+
+    <button class="btn btn-outline mt-8" onclick="exportData()" style="width:100%;justify-content:center">📥 Export all data as JSON</button>
+  `, true);
+}
+
+// ============================================
+// EXPORT
+// ============================================
+function exportData() {
+  const data = {
+    exported_at: new Date().toISOString(),
+    settings: state.settings,
+    shows: state.shows,
+    movies: state.movies,
+    books: state.books
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `hobbiton-export-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Data exported!');
+}
+
+// ============================================
+// MODAL HELPERS
+// ============================================
+function showModal(content, center = false) {
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.className = `modal-overlay ${center ? 'modal-center' : ''}`;
+  overlay.id = 'modal-overlay';
+  overlay.innerHTML = `<div class="modal">${content}</div>`;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.body.appendChild(overlay);
+}
+
+function closeModal() {
+  const el = document.getElementById('modal-overlay');
+  if (el) el.remove();
+}
+
+// ============================================
+// CONFETTI
+// ============================================
+function fireConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+  const colors = ['#D4893F', '#5CB85C', '#D4A843', '#D45C5C', '#7FB3D4', '#F5E6C8'];
+
+  for (let i = 0; i < 100; i++) {
+    pieces.push({
+      x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+      y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 15,
+      vy: -Math.random() * 20 - 5,
+      w: Math.random() * 8 + 4,
+      h: Math.random() * 6 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 10,
+      gravity: 0.4
+    });
+  }
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.vy += p.gravity;
+      p.y += p.vy;
+      p.rotation += p.rotSpeed;
+      p.vx *= 0.99;
+
+      if (p.y < canvas.height + 50) {
+        alive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rotation * Math.PI / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+    });
+    frame++;
+    if (alive && frame < 180) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+// ============================================
+// UTILITY
+// ============================================
+// Deduplicate by key, keeping last occurrence (most recent / from DB)
+function dedup(arr, key) {
+  const seen = new Map();
+  arr.forEach(item => seen.set((item[key] || '').toLowerCase().trim(), item));
+  return Array.from(seen.values());
+}
+
+function esc(str) {
+  if (!str) return '';
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[d.getMonth()]} ${d.getDate()}`;
+}
+
+function dateDiffText(start, end) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const days = Math.round((e - s) / (1000*60*60*24));
+  if (days < 30) return `${days} days`;
+  const months = Math.round(days / 30);
+  return `${months} month${months !== 1 ? 's' : ''}`;
+}
+
+function getDayName(date) {
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  return days[date.getDay()];
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ============================================
+// INIT
+// ============================================
+passInput.focus();
+initSupabase();
+</script>
+</body>
+</html>
